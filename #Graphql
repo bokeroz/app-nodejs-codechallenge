@@ -1,0 +1,27 @@
+
+mutation{
+  createTransaction(input:{
+    accountExternalIdCredit:"431f10f2-5247-4c5c-8f86-6ca45d311ec7",
+    accountExternalIdDebit: "66d35f0d-2778-4e5b-88de-6380b574d549",
+    tranferTypeId: 1,
+    value: 120
+  }){
+    success
+    message
+  }
+}
+
+query {
+    transactions(first: 2) {
+        transactionExternalId transactionType { name } transactionStatus { name }
+        value createdAt
+    }
+}
+
+
+query {
+    transaction(id: "1b4b2cdf-2948-445f-9196-599411415169") {
+        transactionExternalId transactionType { name } transactionStatus { name }
+        value createdAt
+    }
+}

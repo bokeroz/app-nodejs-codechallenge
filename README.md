@@ -1,13 +1,3 @@
-# Yape Code Challenge :rocket:
-
-Our code challenge will let you marvel us with your Jedi coding skills :smile:. 
-
-Don't forget that the proper way to submit your work is to fork the repo and create a PR :wink: ... have fun !!
-
-- [Problem](#problem)
-- [Tech Stack](#tech_stack)
-- [Send us your challenge](#send_us_your_challenge)
-
 # Problem
 
 Every time a financial transaction is created it must be validated by our anti-fraud microservice and then the same service sends a message back to update the transaction status.
@@ -33,50 +23,74 @@ Every transaction with a value greater than 1000 should be rejected.
 # Tech Stack
 
 <ol>
-  <li>Node. You can use any framework you want (i.e. Nestjs with an ORM like TypeOrm or Prisma) </li>
-  <li>Any database</li>
-  <li>Kafka</li>    
+  <li>Nestjs, Prisma, nestjs, graphql </li>
+  <li>Database: Postgresql</li>
+  <li>Kafka</li>
+  <li>Docker</li>    
 </ol>
 
 We do provide a `Dockerfile` to help you get started with a dev environment.
 
-You must have two resources:
+Run the following commands at the root of the project:
 
-1. Resource to create a transaction that must containt:
+1.- Recommended commands to run the project
+```
+npm i 
+``` 
+```
+docker-compose -f docker-compose.yml up
+```
+```
+npx prisma migrate dev
+```
+```
+npx prisma db seed
+```
+```
+npm run main:dev
+```
+```
+npm run transaction:dev
+```
+```
+npm run antifraud:dev
+```
+
+1. Resource to create a transaction graphql:
 
 ```json
-{
-  "accountExternalIdDebit": "Guid",
-  "accountExternalIdCredit": "Guid",
-  "tranferTypeId": 1,
-  "value": 120
+mutation{
+  createTransaction(input:{
+    accountExternalIdCredit:"431f10f2-5247-4c5c-8f86-6ca45d311ec7",
+    accountExternalIdDebit: "66d35f0d-2778-4e5b-88de-6380b574d549",
+    tranferTypeId: 1,
+    value: 120
+  }){
+    success
+    message
+  }
 }
 ```
 
 2. Resource to retrieve a transaction
 
 ```json
-{
-  "transactionExternalId": "Guid",
-  "transactionType": {
-    "name": ""
-  },
-  "transactionStatus": {
-    "name": ""
-  },
-  "value": 120,
-  "createdAt": "Date"
+query {
+    transaction(id: "1b4b2cdf-2948-445f-9196-599411415169") {
+        transactionExternalId transactionType { name } transactionStatus { name }
+        value createdAt
+    }
 }
 ```
 
-## Optional
+3.- Resource to get transactions.
+```json
+query {
+    transactions(first: 15) {
+        transactionExternalId transactionType { name } transactionStatus { name }
+        value createdAt
+    }
+}
+```
 
-You can use any approach to store transaction data but you should consider that we may deal with high volume scenarios where we have a huge amount of writes and reads for the same data at the same time. How would you tackle this requirement?
 
-You can use Graphql;
-
-# Send us your challenge
-
-When you finish your challenge, after forking a repository, you **must** open a pull request to our repository. There are no limitations to the implementation, you can follow the programming paradigm, modularization, and style that you feel is the most appropriate solution.
-
-If you have any questions, please let us know.
